@@ -1,0 +1,4 @@
+module   anonymous
+data     f401,0008,f501,0009,2645,f602,000a,b000
+data     000f,0005,0000
+relocate 0001,0003,0006

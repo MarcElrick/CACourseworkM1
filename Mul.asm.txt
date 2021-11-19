@@ -1,0 +1,13 @@
+; Program multiplication
+; File: Mul.asm.txt
+; Compute a = b * c
+    load  R4,b[R0] ; R4 = b
+    load  R5,c[R0] ; R5 = c
+    mul   R6,R4,R5 ; R6 = b*c
+    store R6,a[R0] ; a  = b*c
+    trap  R0,R0,R0 ; terminates the program
+; Static variables placed in the memory
+b   data 15
+c   data 5
+a   data 0
+
