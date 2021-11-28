@@ -118,11 +118,21 @@ repeat forever
             st_jal2: reg[ir_d] := pc, pc := ad,
               assert [ctl_rf_ld, ctl_rf_pc, ctl_pc_ld, ctl_pc_ad]
 
+        
+        7 -> loadxi instruction
+            st_loadxi0: ad := mem[pc], pc++;
+              assert [ctl_ma_pc, ctl_ad_ld, ctl_x_pc, ctl_alu_abc=011, ctl_pc_ld]
+            st_loadxi1:  ad := reg[ir_sa] + ad; 
+              assert [ctl_y_ad, ctl_alu_abc=000, ctl_ad_ld, ctl_ad_alu]
+            st_loadxi2:  reg[ir_d] := mem[ad]
+                assert [ctl_rf_ld] -- Operates just like load up to now.
+            st_loadxi3: reg[ir_sa] := reg[ir_sa] + 1 -- increment counter by 1
+                assert [ctl_alu_abc=011, ctl_rf_ld, ctl_rf_alu]
+
+
 -- The remaining opcodes are used in the full Sigma16 architecture,
 -- but in the Core they are unimplemented and treated as nop
 
-        7 -> -- nop
-        8 -> -- nop
         9 -> -- nop
         10 -> -- nop
         11 -> -- nop
@@ -162,7 +172,7 @@ control reset ir cc  (SysIO {..}) = (ctlstate,start,ctlsigs)
         [reset,
          st_add, st_sub, st_mul0, st_cmp, st_trap0,
          st_lea2,  st_load2, st_store2, st_jump2,
-         st_jumpc02, st_jumpc12, st_jal2]
+         st_jumpc02, st_jumpc12, st_jal2, st_loadxi3]
       st_start = and2 start cpu
 
       dff_instr_fet = dff (or2 st_start (and2 dff_instr_fet io_DMA))
@@ -230,6 +240,17 @@ control reset ir cc  (SysIO {..}) = (ctlstate,start,ctlsigs)
       dff_jal2 = dff (or2 st_jal1 (and2 dff_jal2 io_DMA))
       st_jal2  = and2 dff_jal2 cpu
 
+-- loadxi control states
+      dff_loadxi0 = dff (or2 (pRX!!7) (and2 dff_loadxi0 io_DMA))
+      st_loadxi0  = and2 dff_loadxi0 cpu
+      dff_loadxi1 = dff (or2 st_loadxi0 (and2 dff_loadxi1 io_DMA))
+      st_loadxi1  = and2 cpu dff_loadxi1
+      dff_loadxi2 = dff (or2 st_loadxi1 (and2 dff_loadxi2 io_DMA))
+      st_loadxi2  = and2 cpu dff_loadxi2
+      dff_loadxi3 = dff (or2 st_loadxi2 (and2 dff_loadxi3 io_DMA))
+      st_loadxi3  = and2 cpu dff_loadxi3
+
+
 -- RRR control states
       dff_add   = dff (or2 (pRRR!!0) (and2 dff_add io_DMA))
       st_add    = and2 dff_add cpu
@@ -252,6 +273,7 @@ control reset ir cc  (SysIO {..}) = (ctlstate,start,ctlsigs)
 -- Generate control signals
       ctl_rf_ld   = orw [st_load2,st_lea1,st_add,st_sub,
                            st_jal2]
+      ctl_rf_ldxi   = orw [st_loadxi3]
       ctl_rf_ldcc = orw [st_cmp, st_add, st_sub]
       ctl_rf_pc   = orw [st_jal2]
       ctl_rf_alu  = orw [st_lea1,st_add,st_sub]

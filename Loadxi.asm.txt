@@ -1,0 +1,43 @@
+; Program loadxi
+; File: Loadxi.asm.txt
+; This is a modified version of the solution to problem set 5, used to test the loadxi instruction.
+; The program will take the sum of values in an array using loadxi. We will then check the value of the counter, and ensure that it is the size of the array.
+
+; Register usage
+; R1 = constant 1
+; R2 = n
+; R3 = i
+; R4 = sum
+; Initialise R1=1, R2=n=0, R3=i=0, R4=sum=0
+    lea R1,1[R0] ; R1 = constant 1
+    load R2,n[R0] ; R2 = n
+    add R3,R0,R0 ; R3 = i = 0
+    add R4,R0,R0 ; R4 = sum = 0
+; Top of loop, determine whether to remain in loop
+; while i < n do
+whileloop
+        cmp R3,R2 ; compare i, n
+        jumpge done[R0] ; if i>=n then goto done
+
+
+; sum := sum + x[i];
+        loadxi R5,x[R3] ; R5 = x[i]
+        add R4,R4,R5 ; sum := sum + x[i]
+
+; goto loop
+        jump whileloop[R0] ; goto whileloop
+
+; finish
+done    store R4,sum[R0] ; sum := R4
+        trap R0,R0,R0 ; terminate
+
+
+; Data area
+n       data 6
+sum     data 0
+x       data 18
+        data -33
+        data 21
+        data -2
+        data 40
+        data 25

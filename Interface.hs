@@ -47,6 +47,7 @@ data CtlSig a = CtlSig
 
 -- Controls for register file
    ctl_rf_ld,   -- Load  register file (if 0, remain unchanged)
+   ctl_rf_ldxi, -- load register file and increment counter (added for loadxi)
    ctl_rf_ldcc, -- Load  R15 (if 0, remain unchanged; ld takes priority)
    ctl_rf_pc,   -- Input to register file is pc (if 0, check ctl_rf_alu)
    ctl_rf_alu,  -- Input to register file is ALU output r (if 0, use m)
