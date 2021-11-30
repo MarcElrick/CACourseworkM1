@@ -47,8 +47,8 @@ data CtlSig a = CtlSig
 
 -- Controls for register file
    ctl_rf_ld,   -- Load  register file (if 0, remain unchanged)
-   ctl_rf_ldxi, -- load register file and increment counter (added for loadxi)
    ctl_rf_ldcc, -- Load  R15 (if 0, remain unchanged; ld takes priority)
+   ctl_rf_ldxi,  -- Use ir_sa as destination (if 0, use ir_d)
    ctl_rf_pc,   -- Input to register file is pc (if 0, check ctl_rf_alu)
    ctl_rf_alu,  -- Input to register file is ALU output r (if 0, use m)
    ctl_rf_sd,   -- Use ir_d as source a address (if 0, use ir_sa)
@@ -81,7 +81,8 @@ data CtlState a = CtlState
    dff_jump0, st_jump0, dff_jump1, st_jump1, dff_jump2, st_jump2,
    dff_jumpc00, st_jumpc00, dff_jumpc01, st_jumpc01, dff_jumpc02, st_jumpc02,
    dff_jumpc10, st_jumpc10, dff_jumpc11, st_jumpc11, dff_jumpc12, st_jumpc12,
-   dff_jal0, st_jal0, dff_jal1, st_jal1, dff_jal2, st_jal2
+   dff_jal0, st_jal0, dff_jal1, st_jal1, dff_jal2, st_jal2, dff_loadxi0, st_loadxi0, 
+   dff_loadxi1, st_loadxi1,dff_loadxi2, st_loadxi2,dff_loadxi3, st_loadxi3 
    :: a         -- all control states are bit signals
   }
   

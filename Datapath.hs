@@ -42,8 +42,12 @@ datapath (CtlSig {..}) (SysIO {..}) memdat = dp
 -- Registers
     (a,b,cc) = regFileSpec n            -- size parameter
                  ctl_rf_ld ctl_rf_ldcc  -- load controls
-                 ir_d rf_sa rf_sb       -- register addresses
-                 p ccnew                -- data inputs
+                 (mux1w ctl_rf_ldxi ir_d ir_sa) -- ctl_rf_ldxi is used to check if we are at the increment
+                                                -- step of a loadxi instruction. If so, we want to use the
+                                                -- source a register as the destination for the addition
+                                                -- from the alu instead of the usual ir_d
+                 rf_sa rf_sb -- register addresses
+                 p ccnew -- data inputs
     ir = reg n ctl_ir_ld memdat
     pc = reg n ctl_pc_ld q
     ad = reg n ctl_ad_ld u

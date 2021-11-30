@@ -21,7 +21,7 @@ whileloop
 
 
 ; sum := sum + x[i];
-        loadxi R5,x[R3] ; R5 = x[i]
+        loadxi R5,x[R3] ; R5 = mem [x + R3]; R3 := R3 + 1
         add R4,R4,R5 ; sum := sum + x[i]
 
 ; goto loop

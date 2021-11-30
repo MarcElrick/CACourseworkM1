@@ -127,12 +127,13 @@ repeat forever
             st_loadxi2:  reg[ir_d] := mem[ad]
                 assert [ctl_rf_ld] -- Operates just like load up to now.
             st_loadxi3: reg[ir_sa] := reg[ir_sa] + 1 -- increment counter by 1
-                assert [ctl_alu_abc=011, ctl_rf_ld, ctl_rf_alu]
+                assert [ctl_alu_abc=011, ctl_rf_ld, ctl_rf_alu, ctl_rf_ldxi]
 
 
 -- The remaining opcodes are used in the full Sigma16 architecture,
 -- but in the Core they are unimplemented and treated as nop
 
+        8 -> -- nop
         9 -> -- nop
         10 -> -- nop
         11 -> -- nop
@@ -277,6 +278,7 @@ control reset ir cc  (SysIO {..}) = (ctlstate,start,ctlsigs)
       ctl_rf_pc   = orw [st_jal2]
       ctl_rf_alu  = orw [st_lea1,st_add,st_sub, st_loadxi3]
       ctl_rf_sd   = orw [st_store2,st_jumpc00]
+      ctl_rf_ldxi = orw [st_loadxi3]
       ctl_alu_a   = orw [st_cmp]
       ctl_alu_b   = orw [st_instr_fet,st_load0,st_store0,st_lea0,
                          st_jump0, st_jumpc00, st_jumpc10, st_jal0, st_loadxi0, st_loadxi3]
