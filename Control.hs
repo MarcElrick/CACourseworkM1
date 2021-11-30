@@ -272,36 +272,35 @@ control reset ir cc  (SysIO {..}) = (ctlstate,start,ctlsigs)
 
 -- Generate control signals
       ctl_rf_ld   = orw [st_load2,st_lea1,st_add,st_sub,
-                           st_jal2]
-      ctl_rf_ldxi   = orw [st_loadxi3]
+                           st_jal2, st_loadxi2, st_loadxi3]
       ctl_rf_ldcc = orw [st_cmp, st_add, st_sub]
       ctl_rf_pc   = orw [st_jal2]
-      ctl_rf_alu  = orw [st_lea1,st_add,st_sub]
+      ctl_rf_alu  = orw [st_lea1,st_add,st_sub, st_loadxi3]
       ctl_rf_sd   = orw [st_store2,st_jumpc00]
       ctl_alu_a   = orw [st_cmp]
       ctl_alu_b   = orw [st_instr_fet,st_load0,st_store0,st_lea0,
-                         st_jump0, st_jumpc00, st_jumpc10, st_jal0]
+                         st_jump0, st_jumpc00, st_jumpc10, st_jal0, st_loadxi0, st_loadxi3]
       ctl_alu_c   = orw [st_instr_fet,st_load0,st_store0,st_lea0,
                          st_jump0, st_jumpc00, st_jumpc10,
-                         st_sub,st_jumpc00,st_jal0]
+                         st_sub,st_jumpc00,st_jal0, st_loadxi0, st_loadxi3]
       ctl_ir_ld   = orw [st_instr_fet]
       ctl_pc_ld   = orw [st_instr_fet, st_lea0, st_load0, st_store0,
                            st_jump0, st_jump2,
                            st_jumpc00, and2 (inv condcc) st_jumpc02,
                            st_jumpc10, and2 condcc st_jumpc12,
-                           st_jal0, st_jal2]
+                           st_jal0, st_jal2, st_loadxi0]
       ctl_pc_ad   = orw [st_jump2, st_jumpc02, st_jumpc12, st_jal2]
       ctl_ad_ld   = orw [st_load0,st_load1,st_lea0,st_lea1,st_store0,
                          st_store1,st_jumpc00,st_jumpc01,
                          st_jumpc10,st_jumpc11,st_jump0,st_jump1,
-                         st_jal0,st_jal1]
-      ctl_ad_alu  = orw [st_load1,st_store1,st_jump1,st_jumpc01,st_jumpc11,st_jal1]
+                         st_jal0,st_jal1,st_loadxi0, st_loadxi1]
+      ctl_ad_alu  = orw [st_load1,st_store1,st_jump1,st_jumpc01,st_jumpc11,st_jal1, st_loadxi1]
       ctl_ma_pc   = orw [st_instr_fet,st_load0,st_lea0,st_store0,
-                           st_jumpc10,st_jumpc00,st_jump0,st_jal0]
+                           st_jumpc10,st_jumpc00,st_jump0,st_jal0, st_loadxi0]
       ctl_x_pc    = orw [st_instr_fet,st_load0,st_lea0,st_store0,
-                           st_jumpc10,st_jumpc00,st_jump0,st_jal0]
+                           st_jumpc10,st_jumpc00,st_jump0,st_jal0, st_loadxi0]
       ctl_y_ad    = orw [st_load1,st_store1,st_lea1,st_jumpc11,
-                         st_jumpc01,st_jump1,st_jal1]
+                         st_jumpc01,st_jump1,st_jal1,st_loadxi1]
       ctl_sto     = orw [st_store2]
 
 -- Record of control states and signals
