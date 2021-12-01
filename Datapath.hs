@@ -9,7 +9,7 @@ module Circuit.Datapath where
 
 -- This module defines the datapath for the M1 circuit, a processor
 -- for the Sigma16 architecture.
- 
+
 -- The datapath contains the registers, computational systems, and
 -- interconnections.  It has two inputs: a set of control signals
 -- provided by the control unit, and a data word from the either the
@@ -22,6 +22,7 @@ import HDL.Hydra.Circuits.Register
 import Circuit.Interface
 import Circuit.ALU
 import Circuit.RegFile
+import Circuit.Multiply
 
 datapath
   :: CBit a
@@ -35,7 +36,7 @@ datapath (CtlSig {..}) (SysIO {..}) memdat = dp
 
 -- Interface
     dp = DPoutputs {..}
-    
+
 -- Size parameters
     n = 16    -- word size
 
@@ -56,9 +57,13 @@ datapath (CtlSig {..}) (SysIO {..}) memdat = dp
     aluOutputs = alu n (ctl_alu_a, ctl_alu_b, ctl_alu_c) x y cc
     (r,ccnew) = aluOutputs
 
+-- Multiply unit
+    multOutputs = multiply n ctl_mult x y
+    (ready,prod,rx,ry,s) = multOutputs --prod is our multiplied value
+
 -- Internal processor signals
-    x = mux1w ctl_x_pc a pc             -- alu input 1
-    y = mux1w ctl_y_ad b ad             -- alu input 2
+    x = mux1w ctl_x_pc a pc             -- alu or multiply input 1
+    y = mux1w ctl_y_ad b ad             -- alu or multiply input 2
     rf_sa = mux1w ctl_rf_sd ir_sa ir_d  -- a = reg[rf_sa]
     rf_sb = mux1w (and2 io_DMA io_regFetch)
               ir_sb

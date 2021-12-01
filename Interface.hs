@@ -45,6 +45,9 @@ data CtlSig a = CtlSig
    ctl_x_pc,    -- Transmit pc on x (if 0, transmit reg[sa])
    ctl_y_ad,    -- Transmit ad on y (if 0, transmit reg[sb])
 
+-- Controls for multiply
+   ctl_mult,     -- Start signal to multiply circuit
+
 -- Controls for register file
    ctl_rf_ld,   -- Load  register file (if 0, remain unchanged)
    ctl_rf_ldcc, -- Load  R15 (if 0, remain unchanged; ld takes priority)
@@ -81,11 +84,11 @@ data CtlState a = CtlState
    dff_jump0, st_jump0, dff_jump1, st_jump1, dff_jump2, st_jump2,
    dff_jumpc00, st_jumpc00, dff_jumpc01, st_jumpc01, dff_jumpc02, st_jumpc02,
    dff_jumpc10, st_jumpc10, dff_jumpc11, st_jumpc11, dff_jumpc12, st_jumpc12,
-   dff_jal0, st_jal0, dff_jal1, st_jal1, dff_jal2, st_jal2, dff_loadxi0, st_loadxi0, 
-   dff_loadxi1, st_loadxi1,dff_loadxi2, st_loadxi2,dff_loadxi3, st_loadxi3 
+   dff_jal0, st_jal0, dff_jal1, st_jal1, dff_jal2, st_jal2, dff_loadxi0, st_loadxi0,
+   dff_loadxi1, st_loadxi1,dff_loadxi2, st_loadxi2,dff_loadxi3, st_loadxi3
    :: a         -- all control states are bit signals
   }
-  
+
 data DPoutputs a = DPoutputs
      { aluOutputs :: ([a], [a])
      , r :: [a]        -- alu output

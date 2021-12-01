@@ -38,7 +38,8 @@ repeat forever
           assert [ctl_alu_abc=001, ctl_rf_alu, ctl_rf_ld, ctl_rf_ldcc]
 
     2 -> -- mul instruction
-        -- unimplemented, does nothing
+        st_mul0: reg[ir_d] := reg[ir_sa] * reg[ir_sb]
+          assert [ctl_mult, ctl_rf_ld]
 
     3 -> -- div instruction
         -- unimplemented, does nothing
@@ -67,7 +68,7 @@ repeat forever
             st_lea1:  ad := reg[ir_sa] + ad
               assert [ctl_y_ad, ctl_alu_abc=000, ctl_ad_ld, ctl_ad_alu,
                       ctl_rf_ld, ctl_rf_alu]
-            st_lea2:  
+            st_lea2:
 
         1 -> -- load instruction
             st_load0:  ad := mem[pc], pc++
@@ -118,11 +119,11 @@ repeat forever
             st_jal2: reg[ir_d] := pc, pc := ad,
               assert [ctl_rf_ld, ctl_rf_pc, ctl_pc_ld, ctl_pc_ad]
 
-        
+
         7 -> loadxi instruction
             st_loadxi0: ad := mem[pc], pc++;
               assert [ctl_ma_pc, ctl_ad_ld, ctl_x_pc, ctl_alu_abc=011, ctl_pc_ld]
-            st_loadxi1:  ad := reg[ir_sa] + ad; 
+            st_loadxi1:  ad := reg[ir_sa] + ad;
               assert [ctl_y_ad, ctl_alu_abc=000, ctl_ad_ld, ctl_ad_alu]
             st_loadxi2:  reg[ir_d] := mem[ad]
                 assert [ctl_rf_ld] -- Operates just like load up to now.
@@ -255,7 +256,7 @@ control reset ir cc  (SysIO {..}) = (ctlstate,start,ctlsigs)
 -- RRR control states
       dff_add   = dff (or2 (pRRR!!0) (and2 dff_add io_DMA))
       st_add    = and2 dff_add cpu
-      
+
       dff_sub   = dff (or2 (pRRR!!1) (and2 dff_sub io_DMA))
       st_sub    = and2 dff_sub cpu
 
@@ -279,6 +280,7 @@ control reset ir cc  (SysIO {..}) = (ctlstate,start,ctlsigs)
       ctl_rf_alu  = orw [st_lea1,st_add,st_sub, st_loadxi3]
       ctl_rf_sd   = orw [st_store2,st_jumpc00]
       ctl_rf_ldxi = orw [st_loadxi3]
+      ctl_mult    = orw [st_mul0]
       ctl_alu_a   = orw [st_cmp]
       ctl_alu_b   = orw [st_instr_fet,st_load0,st_store0,st_lea0,
                          st_jump0, st_jumpc00, st_jumpc10, st_jal0, st_loadxi0, st_loadxi3]
