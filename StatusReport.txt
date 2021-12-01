@@ -1,0 +1,65 @@
+course: CA
+exercise: 2
+date: 2021-02-12
+author: Ayodele Adewale, 2695754
+author: Marc Elrick, 2316291
+author: Ethan Ingraham, 2387502
+author: Abubakr Mahmood, 2257419
+
+'Part 1. Implementing a new instruction: loadxi' compiles and appears to work correctly.
+
+To start on the exercise, we began by splitting our four person group in two, one group focussed 
+on Part 1 and the other focussed on Part 2. After this we each began development efforts on each
+part, meeting up twice every week to discuss progress and issues.
+
+For Part 1, we wrote scaffold code in the comments alongside the other instructions. This was 
+fairly simple as we could essentially copy the load instruction with all of its asserts for the 
+first 3 cycles of loadxi. For the fourth cycle, we simply had to add one to the value of the 
+source register for the RX instruction, and the assertions were fairly obvious from the adjacent 
+instructions. From here, it was simply a case of adding the new states for the four cycles of the 
+loadxi instruction into the asserted control signals. The biggest hurdle when implementing this 
+instruction was finding a way to send the store the incremented value back into the source 
+register from the alu, as the alu would typically store this data in the destination register. 
+This was done by implementing a new control signal which is only 1 for the final cycle of a loadxi 
+instruction. We then use a multiplexer to check if this control signal is 1. If so, the ALU will 
+store the output in ir_sa otherwise, it will store it in ir_d as before.
+
+The test program uses the solution to one of the tutorial exercises. To test the loadxi 
+instruction, we used the created test program Loadxi.asm.txt in assembly language.To run 
+Loadxi.asm.txt we assembled it into object code using the online Sigma16 assembler, switching 
+the loadxi instruction for a standard load instruction as the assembler does not recognise the 
+loadxi command.Then, once the object code was returned, we found the load instruction and 
+changed the opcode from 3 to 7, turning it back into a loadxi instruction. After running the 
+program and monitoring the execution summary of each batch of cyles, we see that the loadxi 
+instruction is being used six times before terminating, and since the input array that the 
+program is iterating over is of length 6, we know loadxi is incrementing it's value correctly. 
+We can also find the last execution where is says m_out=0045 which is hex for 16*4 + 5 = 69, 
+the correct and expected value.
+
+The following is selected extracts from simulation output for loadxi to show that it works:
+
+	************************************************************************
+	Executed instruction:  loadaxi  R5,000e[R3]
+	R5 := 0012 was loaded in cycle 54
+	R5 := 0001 was loaded in cycle 55
+	Processor state:    pc = 000b  ir = f537  ad = 0013
+	************************************************************************
+
+	************************************************************************
+	Executed instruction:  add  R4,R4,R5
+	R4 := 0012 was loaded in cycle 58
+	Processor state:    pc = 000c  ir = 0445  ad = 0013
+	************************************************************************
+	
+    The sections above show that the loadaxi has been executed along with the add instruction
+    that follows it as seen in Loadxi.asm.txt. These instructions are executed 6 times 
+    throughout the execution, and since the input array that the program is iterating over is of 
+    length 6, so we know loadxi is incrementing it's value correctly.
+
+	Memory
+    		m_sto = 0  m_addr = 0012  m_real_addr = 0012  m_data = 0000  m_out =0045
+
+    The above section shows the memory output in the last cycle of execution. m_out =0045 as 
+    discussed above, showing that the output is the expected value of 69.
+
+
