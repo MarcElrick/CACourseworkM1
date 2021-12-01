@@ -24,7 +24,7 @@ This was done by implementing a new control signal which is only 1 for the final
 instruction. We then use a multiplexer to check if this control signal is 1. If so, the ALU will 
 store the output in ir_sa otherwise, it will store it in ir_d as before.
 
-The test program uses the solution to one of the tutorial exercises. To test the loadxi 
+The test program for part 1 uses the solution to one of the tutorial exercises. To test the loadxi 
 instruction, we used the created test program Loadxi.asm.txt in assembly language.To run 
 Loadxi.asm.txt we assembled it into object code using the online Sigma16 assembler, switching 
 the loadxi instruction for a standard load instruction as the assembler does not recognise the 
