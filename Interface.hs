@@ -46,7 +46,8 @@ data CtlSig a = CtlSig
    ctl_y_ad,    -- Transmit ad on y (if 0, transmit reg[sb])
 
 -- Controls for multiply
-   ctl_mult,     -- Start signal to multiply circuit
+   ctl_mult,     -- Start signal for multiply circuit
+   ctl_mult_completed, --Signal that multiplication is finished
 
 -- Controls for register file
    ctl_rf_ld,   -- Load  register file (if 0, remain unchanged)
@@ -74,7 +75,7 @@ data CtlState a = CtlState
    dff_dispatch, st_dispatch,
    dff_add, st_add,
    dff_sub, st_sub,
-   dff_mul0, st_mul0,
+   dff_mul0, st_mul0, dff_mul1, st_mul1, dff_mul2, st_mul2,
    dff_div0, st_div0,
    dff_cmp, st_cmp,
    dff_trap0, st_trap0,

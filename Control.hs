@@ -40,6 +40,9 @@ repeat forever
     2 -> -- mul instruction
         st_mul0: reg[ir_d] := reg[ir_sa] * reg[ir_sb]
           assert [ctl_mult, ctl_rf_ld]
+        st_mul1: wait until multiply.ready is true
+          assert [ctl_mult]
+        st_mul2:
 
     3 -> -- div instruction
         -- unimplemented, does nothing
@@ -172,7 +175,7 @@ control reset ir cc  (SysIO {..}) = (ctlstate,start,ctlsigs)
 -- Control states
       start = orw
         [reset,
-         st_add, st_sub, st_mul0, st_cmp, st_trap0,
+         st_add, st_sub, st_mul2, st_cmp, st_trap0,
          st_lea2,  st_load2, st_store2, st_jump2,
          st_jumpc02, st_jumpc12, st_jal2, st_loadxi3]
       st_start = and2 start cpu
@@ -262,6 +265,11 @@ control reset ir cc  (SysIO {..}) = (ctlstate,start,ctlsigs)
 
       dff_mul0  = dff (or2 (pRRR!!2) (and2 dff_mul0 io_DMA))
       st_mul0   = and2 dff_mul0 cpu
+      dff_mul1  = dff (or2 st_mul0 (and2 dff_mul1 io_DMA))
+      st_mul1   = and2 dff_mul1 cpu
+      --Only progress to mul2 when multiply completed
+      dff_mul2  = dff (or2 (and2 ctl_mult_completed st_mul1) (and2 dff_mul2 io_DMA))
+      st_mul2   = and2 dff_mul2 cpu
 
       dff_div0  = dff (or2 (pRRR!!3) (and2 dff_div0 io_DMA))
       st_div0   = and2 dff_div0 cpu
@@ -280,7 +288,7 @@ control reset ir cc  (SysIO {..}) = (ctlstate,start,ctlsigs)
       ctl_rf_alu  = orw [st_lea1,st_add,st_sub, st_loadxi3]
       ctl_rf_sd   = orw [st_store2,st_jumpc00]
       ctl_rf_ldxi = orw [st_loadxi3]
-      ctl_mult    = orw [st_mul0]
+      ctl_mult    = orw [st_mul0, st_mul1]
       ctl_alu_a   = orw [st_cmp]
       ctl_alu_b   = orw [st_instr_fet,st_load0,st_store0,st_lea0,
                          st_jump0, st_jumpc00, st_jumpc10, st_jal0, st_loadxi0, st_loadxi3]
