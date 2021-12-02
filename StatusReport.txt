@@ -6,7 +6,8 @@ author: Marc Elrick, 2316291
 author: Ethan Ingraham, 2387502
 author: Abubakr Mahmood, 2257419
 
-'Part 1. Implementing a new instruction: loadxi' compiles and appears to work correctly.
+'Part 1. Implementing a new instruction: loadxi' compiles and appears to work correctly, however
+'Part 2. Controlling a functional unit: mul' compiles but does not work correctly.
 
 To start on the exercise, we began by splitting our four person group in two, one group focussed 
 on Part 1 and the other focussed on Part 2. After this we each began development efforts on each
@@ -62,4 +63,6 @@ The following is selected extracts from simulation output for loadxi to show tha
     The above section shows the memory output in the last cycle of execution. m_out =0045 as 
     discussed above, showing that the output is the expected value of 69.
 
+
+'Part 2. Controlling a functional unit: mul' compiles but does not function correctly.
 
