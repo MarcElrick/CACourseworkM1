@@ -92,7 +92,7 @@ m1 reset (SysIO {..}) =
 
 -- Control
     (ctl_state, ctl_start, ctlsigs) =
-             control reset (ir dp) (cc dp) (SysIO {..})
+             control reset (ir dp) (cc dp) (ready dp) (SysIO {..})
 
 -- Memory
     m_real_addr = field m_addr (n-msize) msize

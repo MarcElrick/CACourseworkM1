@@ -156,10 +156,11 @@ control
   => a         -- reset
   -> [a]       -- ir
   -> [a]       -- cc
+  -> a -- ready signal from multiplier
   -> SysIO a   -- I/O
   -> (CtlState a, a, CtlSig a)
 
-control reset ir cc  (SysIO {..}) = (ctlstate,start,ctlsigs)
+control reset ir cc ready (SysIO {..}) = (ctlstate,start,ctlsigs)
   where
 
 -- Fields of instruction and conditional control
@@ -268,7 +269,7 @@ control reset ir cc  (SysIO {..}) = (ctlstate,start,ctlsigs)
       dff_mul1  = dff (or2 st_mul0 (and2 dff_mul1 io_DMA))
       st_mul1   = and2 dff_mul1 cpu
       --Only progress to mul2 when multiply completed
-      dff_mul2  = dff (or2 (and2 ctl_mult_completed st_mul1) (and2 dff_mul2 io_DMA))
+      dff_mul2  = dff (or2 (and2 ready st_mul1) (and2 dff_mul2 io_DMA))
       st_mul2   = and2 dff_mul2 cpu
 
       dff_div0  = dff (or2 (pRRR!!3) (and2 dff_div0 io_DMA))

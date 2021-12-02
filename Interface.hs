@@ -47,7 +47,6 @@ data CtlSig a = CtlSig
 
 -- Controls for multiply
    ctl_mult,     -- Start signal for multiply circuit
-   ctl_mult_completed, --Signal that multiplication is finished
 
 -- Controls for register file
    ctl_rf_ld,   -- Load  register file (if 0, remain unchanged)
@@ -110,4 +109,5 @@ data DPoutputs a = DPoutputs
      , y :: [a]
      , p :: [a]
      , q :: [a]
+     , ready :: a
      }

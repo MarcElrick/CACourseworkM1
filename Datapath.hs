@@ -60,7 +60,6 @@ datapath (CtlSig {..}) (SysIO {..}) memdat = dp
 -- Multiply unit
     multOutputs = multiply n ctl_mult x y
     (ready,prod,rx,ry,s) = multOutputs --prod is our multiplied value
-    ctl_mult_completed = ready
 
 -- Internal processor signals
     x = mux1w ctl_x_pc a pc             -- alu or multiply input 1
