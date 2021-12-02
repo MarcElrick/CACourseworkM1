@@ -66,3 +66,12 @@ The following is selected extracts from simulation output for loadxi to show tha
 
 'Part 2. Controlling a functional unit: mul' compiles but does not function correctly.
 
+To implement the Multiply instruction in pt 2, we made use of the Multiply.hs circuit in a similar fashion to how the ALU circuit is connected to the datapath. The control signal for this is the newly defined ‘ctl_mult’. An issue we ran into was that the Multiply circuit takes multiple clock cycles. We understood that the circuit outputs a ‘ready’ variable which should signal that the multiplication has been completed, but we were unsure about how to best use this feedback within our control algorithm. 
+
+Our control algorithm for multiply used three states, st_mul0 starts the multiplication circuit, st_mul1 is a passive state which waits for the multiplication to finish and st_mul2 indicates that the circuit has been completed.
+
+The circuit does not compile due to not knowing how to move from the waiting state st_mul1 to st_mul2 once the multiplier circuit is ready. 
+
+We have developed a test program, Mul.asm.txt and Mul.obj.txt, but these could not be tested due to the aforementioned issues with waiting for multiply to complete.
+
+
