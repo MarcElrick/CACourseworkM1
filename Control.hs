@@ -156,7 +156,7 @@ control
   => a         -- reset
   -> [a]       -- ir
   -> [a]       -- cc
-  -> a -- ready signal from multiplier
+  -> a         -- ready signal from multiplier
   -> SysIO a   -- I/O
   -> (CtlState a, a, CtlSig a)
 
@@ -178,7 +178,7 @@ control reset ir cc ready (SysIO {..}) = (ctlstate,start,ctlsigs)
         [reset,
          st_add, st_sub, st_mul2, st_cmp, st_trap0,
          st_lea2,  st_load2, st_store2, st_jump2,
-         st_jumpc02, st_jumpc12, st_jal2, st_loadxi3]
+         st_jumpc02, st_jumpc12, st_jal2, st_loadxi3] -- loadxi and mul states added
       st_start = and2 start cpu
 
       dff_instr_fet = dff (or2 st_start (and2 dff_instr_fet io_DMA))
@@ -264,7 +264,8 @@ control reset ir cc ready (SysIO {..}) = (ctlstate,start,ctlsigs)
       dff_sub   = dff (or2 (pRRR!!1) (and2 dff_sub io_DMA))
       st_sub    = and2 dff_sub cpu
 
-      dff_mul0  = dff (or2 (pRRR!!2) (and2 dff_mul0 io_DMA))
+      dff_mul0  = dff (or2 (pRRR!!2) (and2 dff_mul0 io_DMA))  
+      -- New states for mul
       st_mul0   = and2 dff_mul0 cpu
       dff_mul1  = dff (or2 st_mul0 (and2 dff_mul1 io_DMA))
       st_mul1   = and2 dff_mul1 cpu
@@ -282,6 +283,7 @@ control reset ir cc ready (SysIO {..}) = (ctlstate,start,ctlsigs)
       st_trap0  = and2 dff_trap0 cpu
 
 -- Generate control signals
+-- New states added to match assertions
       ctl_rf_ld   = orw [st_load2,st_lea1,st_add,st_sub,
                            st_jal2, st_loadxi2, st_loadxi3]
       ctl_rf_ldcc = orw [st_cmp, st_add, st_sub]

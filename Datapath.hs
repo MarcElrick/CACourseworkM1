@@ -71,7 +71,7 @@ datapath (CtlSig {..}) (SysIO {..}) memdat = dp
 
     p  = mux1w ctl_rf_pc                -- regfile data input
             (mux1w ctl_rf_alu
-                (mux1w (and2 ctl_mult ready) memdat prod)
+                (mux1w (and2 ctl_mult ready) memdat prod) -- if the ctl_mult signal is 1 and output is ready, set to prod, else, set to usual output
                 r)
             pc
 
